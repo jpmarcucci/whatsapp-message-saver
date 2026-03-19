@@ -76,7 +76,12 @@ client.on('message_create', async (message) => {
         let log = `[${dataHora}] ${nomeExibicao}: ${texto}`;
 
         const nomeFilePath = path.join(baseDir, 'nomecontato.txt');
-        fs.writeFileSync(nomeFilePath, nomeExibicao);
+        // só salva se NÃO for mensagem sua
+        if (!isFromMe) {
+            if (!fs.existsSync(nomeFilePath)) {
+                fs.writeFileSync(nomeFilePath, nomeContatoReal);
+            }
+        }
 
         // Se for media
         if (message.hasMedia) {
