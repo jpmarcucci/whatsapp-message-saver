@@ -18,3 +18,5 @@ Para persistir a sessão são utilizados os diretórios .wwebjs_auth e .wwebjs_c
 Para persistir as mensagens é utilizado o diretório "mensagens".  
 
 Depois de feita a conexão o BOT começará a ouvir o WhatsApp e assim que uma mensagem chegar será salvo no diretoŕio "mensagens". Por enquanto não faz download das mensagens antigas.  
+
+Para acessar o visualizador web: http://localhost:8080  
