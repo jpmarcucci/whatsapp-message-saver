@@ -1,0 +1,22 @@
+services:
+  whatsapp-message-saver:
+    image: jpmarcucci/whatsapp-message-saver:v1
+    container_name: whatsapp-message-saver
+    environment:
+      - TZ=America/Sao_Paulo
+      - NODE_ENV=production
+    volumes:
+      - ./mensagens:/app/mensagens
+      - ./wwebjs_auth:/app/wwebjs_auth
+      - ./wwebjs_cache:/app/wwebjs_cache
+    ports:
+      - 8080:3000
+    networks:
+      - whatsapp-message-saver
+
+networks:
+  whatsapp-message-saver:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "192.168.20.0/24"

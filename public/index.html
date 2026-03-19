@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>WhatsApp Viewer</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: #111;
+            color: #fff;
+            overflow: auto;
+        }
+
+        .chat {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            padding: 12px;
+            background: #075E54;
+            color: white;
+            font-weight: bold;
+        }
+
+        .messages {
+            flex: 1;
+            padding: 10px;
+            overflow: auto;
+            background: #e5ddd5;
+        }
+
+        .msg {
+            margin: 5px 0;
+            padding: 8px;
+            background: white;
+            border-radius: 6px;
+            max-width: 70%;
+        }
+
+        .item {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #333;
+        }
+
+        .item:hover {
+            background: #222;
+        }
+
+        .file-link {
+            display: block;
+            margin-top: 5px;
+            color: blue;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <h3 style="padding:10px;">Conversas</h3>
+        <div id="lista"></div>
+    </div>
+
+    <div class="chat">
+        <div class="header" id="titulo">Selecione um chat</div>
+        <div class="messages" id="mensagens"></div>
+    </div>
+
+    <script src="app.js"></script>
+
+</body>
+
+</html>
