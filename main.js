@@ -31,46 +31,52 @@ function gerarNomeArquivo(ext) {
 }
 
 // Evento de mensagem
-client.on('message', async (message) => {
+client.on('message_create', async (message) => {
     try {
         // Ignora Stories (STATUS) e do Prorio Bot
         if (message.from === 'status@broadcast') return;
-        if (message.fromMe) return;
 
+        const isFromMe = message.fromMe;
         const chat = await message.getChat();
         const contato = await message.getContact();
 
-        const numero = contato.number;
-        const nomeContato = contato.pushname || contato.name || numero;
+        let identificador;
+        let nomeExibicao;
 
-        // Se for grupo
-        const identificador = numero;
-        const nomeExibicao = nomeContato;
+        // Se a mensagem é sua (enviada)
+        if (message.fromMe) {
+            identificador = message.to; // destinatário
+        } else {
+            identificador = message.from; // quem enviou
+        }
+        // remove sufixo do WhatsApp
+        identificador = identificador.replace(/@c\.us|@g\.us/g, '');
+
+        if (isFromMe) {
+            nomeExibicao = 'Eu';
+        } else {
+            nomeExibicao = contato.pushname || contato.number;
+        }
 
         if (chat.isGroup) {
             const nomeGrupo = nomeSeguro(chat.name || 'grupo');
             identificador = `grupo_${nomeGrupo}`;
-            nomeExibicao = `${nomeContato} (grupo: ${chat.name})`;
+            nomeExibicao = `${nomeExibicao} (grupo: ${chat.name})`;
         }
 
         const texto = message.body || '';
         const dataHora = new Date().toLocaleString();
+        const dataHoje = getDataFormatada();
 
         // Estrutura de pasta
-        const dataHoje = getDataFormatada();
         const baseDir = path.join(__dirname, 'mensagens', dataHoje, identificador);
-
         fs.mkdirSync(baseDir, { recursive: true });
-
         const filePath = path.join(baseDir, 'mensagens.txt');
 
         let log = `[${dataHora}] ${nomeExibicao}: ${texto}`;
 
-        // Salva nome do contato
         const nomeFilePath = path.join(baseDir, 'nomecontato.txt');
-
-        // Sempre atualiza (caso o nome mude)
-        fs.writeFileSync(nomeFilePath, nomeContato);
+        fs.writeFileSync(nomeFilePath, nomeExibicao);
 
         // Se for media
         if (message.hasMedia) {
