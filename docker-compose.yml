@@ -5,6 +5,7 @@ services:
     environment:
       - TZ=America/Sao_Paulo
       - NODE_ENV=production
+      - CORS_URL=http://localhost:8080
     volumes:
       - ./mensagens:/app/mensagens
       - ./wwebjs_auth:/app/wwebjs_auth

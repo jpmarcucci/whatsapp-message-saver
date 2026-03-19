@@ -9,6 +9,8 @@ const PORT = 3000;
 
 const BASE_DIR = path.join(__dirname, 'mensagens');
 
+const urlorigin = process.env.CORS_URL;
+
 function caminhoSeguro(base, alvo) {
     const resolved = path.resolve(base, alvo);
     if (!resolved.startsWith(base)) {
@@ -22,7 +24,7 @@ app.use(helmet());
 
 // CORS (ajuste se quiser liberar só localhost)
 app.use(cors({
-    origin: 'http://localhost:3000'
+    origin: urlorigin
 }));
 
 app.use(express.static('public'));
