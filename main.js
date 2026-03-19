@@ -79,7 +79,7 @@ client.on('message_create', async (message) => {
         // só salva se NÃO for mensagem sua
         if (!isFromMe) {
             if (!fs.existsSync(nomeFilePath)) {
-                fs.writeFileSync(nomeFilePath, nomeContatoReal);
+                fs.writeFileSync(nomeFilePath, nomeExibicao);
             }
         }
 
