@@ -1,11 +1,12 @@
 services:
   whatsapp-message-saver:
-    image: jpmarcucci/whatsapp-message-saver:v1
+    image: jpmarcucci/whatsapp-message-saver:v1.1
     container_name: whatsapp-message-saver
+    hostname: whatsapp-message-saver
     environment:
       - TZ=America/Sao_Paulo
       - NODE_ENV=production
-      - CORS_URL=http://localhost:8080/
+      - CORS_URL=http://localhost:8080
     volumes:
       - ./mensagens:/app/mensagens
       - ./wwebjs_auth:/app/.wwebjs_auth
