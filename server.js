@@ -19,9 +19,6 @@ function caminhoSeguro(base, alvo) {
     return resolved;
 }
 
-// Segurança básica
-app.use(helmet());
-
 // CORS (ajuste se quiser liberar só localhost)
 app.use(cors({
     origin: urlorigin
