@@ -20,3 +20,6 @@ Para persistir as mensagens é utilizado o diretório "mensagens".
 Depois de feita a conexão o BOT começará a ouvir o WhatsApp e assim que uma mensagem chegar será salvo no diretoŕio "mensagens". Por enquanto não faz download das mensagens antigas.  
 
 Para acessar o visualizador web: http://localhost:8080  
+
+# Observacoes
+Quando baixar nova versão, a sessão é invalidada, é necessário apagar os diretorios de sessao e autenticar novamente lendo o QR Code.  
