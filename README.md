@@ -1,22 +1,70 @@
-# Whatsapp Message Saver
+# 📦 WhatsApp Message Saver
 
-Esse projeto foi desenvolvido para ser um backup em tempo real de mensagens do WhatsApp. Por utilizar o site oficial do WhatsApp as chances de bloqueio são pequenas porém não nulas.  
+Uma solução **self-hosted** para realizar backup em tempo real de
+mensagens do WhatsApp, com suporte a múltiplos tipos de mídia e
+visualização via interface web.
 
-Suporta o download de mensagen, imagens, audio, video e documentos.  
+## 🚀 Visão Geral
 
-Inclui um visualizador de mensagens.  
+Este projeto foi desenvolvido para capturar e armazenar mensagens do
+WhatsApp em tempo real, criando um histórico confiável e de fácil
+acesso.
 
-# Como rodar
+Ele utiliza o **WhatsApp Web** como base de integração, o que reduz
+significativamente as chances de bloqueio --- embora não as elimine
+completamente.
+
+## ✨ Funcionalidades
+
+-   📩 Captura de mensagens em tempo real\
+-   🖼️ Suporte a múltiplos tipos de mídia:
+    -   Texto
+    -   Imagens
+    -   Áudios
+    -   Vídeos
+    -   Documentos\
+-   💾 Armazenamento local (self-hosted)\
+-   🌐 Interface web para visualização das mensagens\
+-   🔄 Estrutura simples e extensível
+
+## 🐳 Como Rodar (Docker)
+
+``` bash
 docker compose up -d
+```
 
-# Manual
-No primeiro uso será solicitado a leitura do QR Code. 
-No aplicativo do WhatsApp -> Dispositivos Conectados -> Conectar Dispositivo.
+## 🔐 Primeiro Acesso (Autenticação)
 
-Para persistir a sessão são utilizados os diretórios .wwebjs_auth e .wwebjs_cache  
+1.  Abra o WhatsApp no celular\
+2.  Vá em **Dispositivos conectados**\
+3.  Clique em **Conectar dispositivo**\
+4.  Escaneie o QR Code exibido no terminal
 
-Para persistir as mensagens é utilizado o diretório "mensagens".  
+## 💾 Persistência de Dados
 
-Depois de feita a conexão o BOT começará a ouvir o WhatsApp e assim que uma mensagem chegar será salvo no diretoŕio "mensagens". Por enquanto não faz download das mensagens antigas.  
+-   `.wwebjs_auth` → Sessão autenticada\
+-   `.wwebjs_cache` → Cache da conexão\
+-   `mensagens/` → Mensagens e mídias
 
-Para acessar o visualizador web: http://localhost:8080  
+## ⚙️ Funcionamento
+
+Após a autenticação:
+
+-   O bot inicia automaticamente\
+-   Escuta novas mensagens em tempo real\
+-   Salva tudo no diretório `mensagens/`
+
+⚠️ **Importante:** não baixa mensagens antigas.
+
+## 🌐 Visualizador
+
+http://localhost:8080
+
+## ⚠️ Observações
+
+-   Usa WhatsApp Web (não API oficial)\
+-   Existe baixo risco de bloqueio
+
+## 🤝 Contribuição
+
+Contribuições são bem-vindas!
