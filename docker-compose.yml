@@ -1,6 +1,6 @@
 services:
   whatsapp-message-saver:
-    image: jpmarcucci/whatsapp-message-saver:v1.1
+    image: jpmarcucci/whatsapp-message-saver:v1.3
     container_name: whatsapp-message-saver
     hostname: whatsapp-message-saver
     environment:
