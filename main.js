@@ -2,6 +2,8 @@ const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const fs = require('fs');
 const path = require('path');
+const varDebug = process.env.DEBUG || "False"
+
 
 const client = new Client({
     authStrategy: new LocalAuth(),
@@ -107,10 +109,12 @@ client.on('message_create', async (message) => {
         log += '\n';
 
         fs.appendFile(filePath, log, (err) => {
-            if (err) {
-                console.error('Erro ao salvar:', err);
-            } else {
-                console.log('Mensagem Salva:', log.trim());
+            if (varDebug == "True") {
+                if (err) {
+                    console.error('Erro ao salvar:', err);
+                } else {
+                    console.log('Mensagem Salva:', log.trim());
+                }
             }
         });
     } catch (erro) {
