@@ -21,11 +21,11 @@ client.on('qr', qr => {
     qrcode.generate(qr, { small: true });
 });
 
-// Função para formatar data (YYYY-MM-DD)
-function getDataFormatada() {
-    const hoje = new Date();
-    return hoje.toISOString().split('T')[0];
-}
+// // Função para formatar data (YYYY-MM-DD)
+// function getDataFormatada() {
+//     const hoje = new Date();
+//     return hoje.toISOString().split('T')[0];
+// }
 
 // Gera nome único de arquivo de media
 function gerarNomeArquivo(ext) {
@@ -41,6 +41,7 @@ client.on('message_create', async (message) => {
         const isFromMe = message.fromMe;
         const chat = await message.getChat();
         const contato = await message.getContact();
+        const nomeContatoReal = contato.pushname || contato.name || contato.number;
 
         let identificador;
         let nomeExibicao;
@@ -67,21 +68,27 @@ client.on('message_create', async (message) => {
         }
 
         const texto = message.body || '';
-        const dataHora = new Date().toLocaleString();
-        const dataHoje = getDataFormatada();
+        const dataHora = new Date().toLocaleString('pt-BR');
+        //const dataHoje = getDataFormatada();
 
         // Estrutura de pasta
-        const baseDir = path.join(__dirname, 'mensagens', dataHoje, identificador);
-        fs.mkdirSync(baseDir, { recursive: true });
+        const baseDir = path.join(__dirname, 'mensagens', identificador);
+        if (!fs.existsSync(baseDir)) {
+            fs.mkdirSync(baseDir, { recursive: true });
+        }
+
         const filePath = path.join(baseDir, 'mensagens.txt');
 
         let log = `[${dataHora}] ${nomeExibicao}: ${texto}`;
 
         const nomeFilePath = path.join(baseDir, 'nomecontato.txt');
         // só salva se NÃO for mensagem sua
-        if (!isFromMe) {
-            if (!fs.existsSync(nomeFilePath)) {
-                fs.writeFileSync(nomeFilePath, nomeExibicao);
+        if (!isFromMe && nomeContatoReal) {
+            if (
+                !fs.existsSync(nomeFilePath) ||
+                fs.readFileSync(nomeFilePath, 'utf-8') === 'EU'
+            ) {
+                fs.writeFileSync(nomeFilePath, nomeContatoReal);
             }
         }
 
@@ -100,7 +107,7 @@ client.on('message_create', async (message) => {
                 const buffer = Buffer.from(media.data, 'base64');
                 fs.writeFileSync(caminhoArquivo, buffer);
 
-                log += ` [${tipo.toUpperCase()}: ${nomeArquivo}]`;
+                log += ` [ARQUIVO:${identificador}/${nomeArquivo}]`;
             } else {
                 log += ` [ERRO AO BAIXAR MÍDIA]`;
             }

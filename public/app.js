@@ -2,38 +2,31 @@ async function carregar() {
     const lista = document.getElementById('lista');
     lista.innerHTML = '';
 
-    const resDias = await fetch('/dias');
-    if (!resDias) return;
+    const res = await fetch('/contatos');
+    if (!res) return;
 
-    const dias = await resDias.json();
+    const contatos = await res.json();
 
-    for (let dia of dias.reverse()) {
-        const resContatos = await fetch(`/contatos/${dia}`);
-        if (!resContatos) continue;
+    for (let contato of contatos) {
+        let nome = contato;
 
-        const contatos = await resContatos.json();
+        const resNome = await fetch(`/nome/${contato}`);
+        if (resNome) nome = await resNome.text();
 
-        for (let contato of contatos) {
-            let nome = contato;
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerText = nome;
 
-            const resNome = await fetch(`/nome/${dia}/${contato}`);
-            if (resNome) nome = await resNome.text();
+        div.onclick = () => abrirChat(contato, nome);
 
-            const div = document.createElement('div');
-            div.className = 'item';
-            div.innerText = nome;
-
-            div.onclick = () => abrirChat(dia, contato, nome);
-
-            lista.appendChild(div);
-        }
+        lista.appendChild(div);
     }
 }
 
-async function abrirChat(dia, contato, nome) {
+async function abrirChat(contato, nome) {
     document.getElementById('titulo').innerText = nome;
 
-    const res = await fetch(`/mensagens/${dia}/${contato}`);
+    const res = await fetch(`/mensagens/${contato}`);
     if (!res) return;
 
     const texto = await res.text();
@@ -48,37 +41,22 @@ async function abrirChat(dia, contato, nome) {
 
         const div = document.createElement('div');
         div.className = 'msg';
+        div.innerHTML = formatarMensagem(linha);
 
-        const regex = /\[(.*?)\]/g;
-        let textoLimpo = linha;
-        let match;
-
-        while ((match = regex.exec(linha)) !== null) {
-            const conteudo = match[1];
-
-            if (conteudo.includes('media_')) {
-                const nomeArquivo = conteudo.split(': ')[1];
-
-                const link = document.createElement('a');
-                link.href = `/arquivos/${dia}/${contato}/${nomeArquivo}`;
-                link.innerText = '📎 Abrir arquivo';
-                link.target = '_blank';
-                link.className = 'file-link';
-
-                textoLimpo = textoLimpo.replace(match[0], '');
-
-                div.innerText = textoLimpo;
-                div.appendChild(link);
-                container.appendChild(div);
-                return;
-            }
-        }
-
-        div.innerText = linha;
         container.appendChild(div);
     });
 
     container.scrollTop = container.scrollHeight;
 }
 
+function formatarMensagem(linha) {
+    const regex = /\[ARQUIVO:(.*?)\]/g;
+
+    return linha.replace(regex, (_, caminho) => {
+        const url = `/arquivos/${caminho}`;
+        const nome = caminho.split('/').pop();
+
+        return `<a href="${url}" target="_blank">📎 ${nome}</a>`;
+    });
+}
 carregar();

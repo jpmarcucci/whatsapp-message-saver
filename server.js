@@ -24,63 +24,34 @@ app.use(cors({
 }));
 
 app.use(express.static('public'));
-
+app.use('/arquivos', express.static(path.join(__dirname, 'mensagens')));
 app.use(express.json());
 
-// Dias
-app.get('/dias', (req, res) => {
+// Lista todos os contatos únicos
+app.get('/contatos', (req, res) => {
     if (!fs.existsSync(BASE_DIR)) return res.json([]);
 
-    const dias = fs.readdirSync(BASE_DIR);
-    res.json(dias);
+    const contatos = fs.readdirSync(BASE_DIR);
+    res.json(contatos);
 });
 
-// Contatos
-app.get('/contatos/:dia', (req, res) => {
-    try {
-        const dir = caminhoSeguro(BASE_DIR, req.params.dia);
+// Todas mensagens de um contato
+app.get('/mensagens/:contato', (req, res) => {
+    const file = path.join(BASE_DIR, req.params.contato, 'mensagens.txt');
 
-        if (!fs.existsSync(dir)) return res.json([]);
+    if (!fs.existsSync(file)) return res.send('');
 
-        res.json(fs.readdirSync(dir));
-    } catch {
-        res.status(400).json({ erro: 'Caminho inválido' });
-    }
+    res.send(fs.readFileSync(file, 'utf-8'));
 });
 
-// Mensagens
-app.get('/mensagens/:dia/:contato', (req, res) => {
-    try {
-        const file = caminhoSeguro(
-            BASE_DIR,
-            `${req.params.dia}/${req.params.contato}/mensagens.txt`
-        );
+app.get('/nome/:contato', (req, res) => {
+    const file = path.join(BASE_DIR, req.params.contato, 'nomecontato.txt');
 
-        if (!fs.existsSync(file)) return res.send('');
+    if (!fs.existsSync(file)) return res.send(req.params.contato);
 
-        res.send(fs.readFileSync(file, 'utf-8'));
-    } catch {
-        res.status(400).json({ erro: 'Caminho inválido' });
-    }
+    res.send(fs.readFileSync(file, 'utf-8'));
 });
 
-// Nome do contato
-app.get('/nome/:dia/:contato', (req, res) => {
-    try {
-        const file = caminhoSeguro(
-            BASE_DIR,
-            `${req.params.dia}/${req.params.contato}/nomecontato.txt`
-        );
-
-        if (!fs.existsSync(file)) {
-            return res.send(req.params.contato);
-        }
-
-        res.send(fs.readFileSync(file, 'utf-8'));
-    } catch {
-        res.status(400).json({ erro: 'Caminho inválido' });
-    }
-});
 
 // Arquivos (protegido)
 app.get('/arquivos/:dia/:contato/:arquivo', (req, res) => {
